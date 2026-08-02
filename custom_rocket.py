@@ -1,7 +1,7 @@
 from rocketpy import Rocket
 from rocketpy.motors import CylindricalTank, Fluid, HybridMotor
 from rocketpy.motors.tank import MassFlowRateBasedTank
-from rocketpy.sensors import GnssReceiver, Gyroscope, Accelerometer, Barometer
+from rocketpy.sensors import Accelerometer, Barometer, GnssReceiver, Gyroscope
 
 
 def create_custom_rocket():

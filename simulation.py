@@ -1,6 +1,6 @@
-import matplotlib.pyplot as plt
 import os
 
+import matplotlib.pyplot as plt
 from rocketpy import Environment, Flight
 
 from custom_rocket import create_custom_rocket
@@ -54,7 +54,7 @@ def main():
         </body>
     </html>
     """
-    
+
     with open(output_path + "report.html", "w") as f:
         f.write(html_report)
 
