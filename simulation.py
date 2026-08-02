@@ -9,8 +9,11 @@ plt.style.use("seaborn-v0_8-colorblind")
 
 output_path = os.path.join(os.path.dirname(__file__), "_output/")
 
+
 def main():
-    """Run a simulation"""
+    """Create and run a simulation then pack to report"""
+
+    # Create environment
     env = Environment(
         gravity=9.80665,
         date=(2023, 10, 13, 14),
@@ -23,10 +26,13 @@ def main():
 
     env.set_atmospheric_model(type="Windy", file="ECMWF")
     env.max_expected_height = 4000
-    env.plots.info(filename=output_path+"env.png")
+    env_plot_path = output_path + "env.png"
+    env.plots.info(filename=env_plot_path)
 
+    # Create rocket from script
     custom_rocket = create_custom_rocket()
 
+    # Simulate a flight
     test_flight = Flight(
         rocket=custom_rocket,
         environment=env,
@@ -34,7 +40,23 @@ def main():
         heading=90,
         rail_length=12,
     )
-    test_flight.plots.trajectory_3d(filename=output_path+"trajectory_3d.png")
+    flight_plot_path = output_path + "trajectory_3d.png"
+    test_flight.plots.trajectory_3d(filename=flight_plot_path)
+
+    # Create report
+    html_report = f"""
+    <html>
+        <body>
+            <h1>Environment</h1>
+            <img src="{env_plot_path}"/>
+            <h1>Flight 3D</h1>
+            <img src="{flight_plot_path}"/>
+        </body>
+    </html>
+    """
+    
+    with open(output_path + "report.html", "w") as f:
+        f.write(html_report)
 
 
 if __name__ == "__main__":
