@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import os
 
 from rocketpy import Environment, Flight
 
@@ -6,6 +7,7 @@ from custom_rocket import create_custom_rocket
 
 plt.style.use("seaborn-v0_8-colorblind")
 
+output_path = os.path.join(os.path.dirname(__file__), "_output/")
 
 def main():
     """Run a simulation"""
@@ -21,7 +23,7 @@ def main():
 
     env.set_atmospheric_model(type="Windy", file="ECMWF")
     env.max_expected_height = 4000
-    env.info()
+    env.plots.info(filename=output_path+"env.png")
 
     custom_rocket = create_custom_rocket()
 
@@ -32,7 +34,7 @@ def main():
         heading=90,
         rail_length=12,
     )
-    test_flight.plots.trajectory_3d()
+    test_flight.plots.trajectory_3d(filename=output_path+"trajectory_3d.png")
 
 
 if __name__ == "__main__":
