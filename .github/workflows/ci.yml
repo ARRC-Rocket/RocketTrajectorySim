@@ -40,8 +40,8 @@ jobs:
         run: uv run ruff format --check
 
       # Currently no tests
-      - name: Check CI tests what it says it tests
-        run: uv run python -m unittest
+      # - name: Check CI tests what it says it tests
+      #   run: uv run python -m unittest
 
   run:
     name: Run script to publish simulation report
@@ -65,19 +65,11 @@ jobs:
         run: |
           uv run python simulation.py
 
-      - name: Upload coverage artifact
+      - name: Upload report.html as artifact
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
-          name: _output
-          path: _output/
-
-      - name: HTML Preview
-        id: html_preview
-        uses: pavi2410/html-preview-action@v5
-        with:
-          html_file: report.html
-          site_root: _output
-          upload: archive
-          archive_name: preview-site
+          name: report
+          path: _output/report.html
+          archive: false
     

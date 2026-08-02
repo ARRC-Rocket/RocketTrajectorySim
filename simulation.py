@@ -1,3 +1,4 @@
+import base64
 import os
 
 import matplotlib.pyplot as plt
@@ -8,6 +9,12 @@ from custom_rocket import create_custom_rocket
 plt.style.use("seaborn-v0_8-colorblind")
 
 output_path = os.path.join(os.path.dirname(__file__), "_output/")
+
+
+def _encode_image(path):
+    with open(path, "rb") as image_file:
+        encoded = base64.b64encode(image_file.read()).decode("utf-8")
+    return f'<img src="data:image/png;base64,{encoded}">'
 
 
 def main():
@@ -48,14 +55,14 @@ def main():
     <html>
         <body>
             <h1>Environment</h1>
-            <img src="{env_plot_path}"/>
+            {_encode_image(env_plot_path)}
             <h1>Flight 3D</h1>
-            <img src="{flight_plot_path}"/>
+            {_encode_image(flight_plot_path)}
         </body>
     </html>
     """
 
-    with open(output_path + "report.html", "w") as f:
+    with open(output_path + "report.html", "w", encoding="utf+8") as f:
         f.write(html_report)
 
 
