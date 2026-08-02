@@ -1,0 +1,12 @@
+# Repo specific
+_output
+
+# VSCode specific
+.vscode/
+
+# Python specific
+.venv
+.ci-venv
+.ruff_cache
+__pycache__
+.pytest_cache
