@@ -1,0 +1,14 @@
+[project]
+name = "rockettrajectorysim"
+version = "0.0.1"
+description = "This repositry hosts a rocket trajectory simulation server that runs a simulation on pipeline"
+readme = "README.md"
+authors = [
+    { name = "zuorenchen", email = "zuorenchen@m110.nthu.edu.tw" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "pylint>=4.0.6",
+    "rocketpy==1.13.0",
+    "ruff>=0.16.1",
+]
