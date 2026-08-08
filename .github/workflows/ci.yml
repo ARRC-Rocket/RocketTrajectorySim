@@ -52,9 +52,14 @@ jobs:
           path: _output/report.html
           archive: false
 
+      # Skipped for forks: a `pull_request` run whose head is a fork gets a
+      # read-only GITHUB_TOKEN whatever `permissions` says, so this step can
+      # only 403. The report is on the run either way, as the `report` artifact.
       - name: Comment on PR
         uses: actions/github-script@v9
-        if: github.event_name == 'pull_request'
+        if: >-
+          github.event_name == 'pull_request'
+          && !github.event.pull_request.head.repo.fork
         with:
           script: |
             github.rest.issues.createComment({
