@@ -3,11 +3,29 @@ from rocketpy.motors import CylindricalTank, Fluid, HybridMotor
 from rocketpy.motors.tank import MassFlowRateBasedTank
 from rocketpy.sensors import Accelerometer, Barometer, GnssReceiver, Gyroscope
 
+# A hollow grain's mass goes as (outer^2 - inner^2), so an outer radius under
+# the inner one is a negative mass. RocketPy 1.13 accepts it in silence: the
+# motor carried -0.623 kg of fuel and the flight apogeed at 200 m, not 131 m.
+GRAIN_OUTER_RADIUS = 0.0843
+GRAIN_INITIAL_INNER_RADIUS = 0.0295
+
+
+def _check_grain_geometry(outer_radius, inner_radius):
+    """A hollow grain needs a positive bore strictly inside the outer wall."""
+    if not 0 < inner_radius < outer_radius:
+        raise ValueError(
+            "grain geometry is impossible: need "
+            "0 < grain_initial_inner_radius < grain_outer_radius, got "
+            f"inner={inner_radius}, outer={outer_radius}"
+        )
+
 
 def create_custom_rocket():
     """
     Create a custom rocket with a hybrid motor and an oxidizer tank.
     """
+
+    _check_grain_geometry(GRAIN_OUTER_RADIUS, GRAIN_INITIAL_INNER_RADIUS)
 
     tank_shape = CylindricalTank(0.133, height=0.83)
     oxidizer_tank = MassFlowRateBasedTank(
@@ -28,13 +46,16 @@ def create_custom_rocket():
         thrust_source=1080,
         dry_mass=0,
         dry_inertia=(0, 0, 0),
-        center_of_dry_mass_position=0.015,
+        # 0.15 in the official scenario, not 0.015. Inert while dry_mass is 0,
+        # since this is a mass-weighted position, but a 10x error waiting for
+        # the day that mass stops being zero.
+        center_of_dry_mass_position=0.15,
         burn_time=(0, 30),
         reshape_thrust_curve=False,
         grain_number=1,
         grain_separation=0,
-        grain_outer_radius=0.00843,
-        grain_initial_inner_radius=0.0295,
+        grain_outer_radius=GRAIN_OUTER_RADIUS,
+        grain_initial_inner_radius=GRAIN_INITIAL_INNER_RADIUS,
         grain_initial_height=0.2757,
         grain_density=900,
         nozzle_radius=0.04425,
